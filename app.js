@@ -6,6 +6,8 @@ var express = require("express"),
     localStrategy = require("passport-local");
     
     var User = require("./models/user");
+    var Freelancer = require("./models/freelancer");
+    var Project = require("./models/project");
     
     
     mongoose.connect("mongodb://localhost/reviso", {useMongoClient: true});
@@ -40,7 +42,20 @@ var express = require("express"),
    
     app.get("/", function(req,res){
         
-        res.render("landing");
+        Freelancer.find({}, function(err, allFreelancers){
+            
+            if(err)
+            {
+                console.log(err);
+            }
+            else{
+                
+                  res.render("landing", {freelancer: allFreelancers});
+            }
+            
+        });
+        
+      
     });
     
     //LOGIN ROUTES
@@ -91,16 +106,108 @@ var express = require("express"),
     });
     
     //FREELANCER ROUTES
-    app.get("/freelancer/:id", function(req,res){
-        //find the project by id and show it in the page
-    });
-    
+   
         
-    app.get("/freelancer/new", function(req,res){
+    app.get("/freelancer/new", isLoggedIn , function(req,res){
         
        res.render("new"); 
     });
     
+    app.post("/freelancer", function(req,res){
+       
+       var image = req.body.image;
+       var desc = req.body.description;
+       var user = {
+           id: req.user._id,
+           username: req.user.username
+            };
+       var newFreelancer = {user: user, image:image, description:desc};
+       
+       Freelancer.create(newFreelancer, function(err, createdFreelancer){
+           
+          if(err)
+          {
+              console.log(err);
+              res.redirect("/freelancer/new");
+          }
+          else
+          {
+              console.log(createdFreelancer);
+              res.redirect("/");
+          }
+       });
+        
+    });
     
+    
+     app.get("/freelancer/:id", function(req,res){
+        //find the freelancer id and send it to ejs file
+        Freelancer.findById(req.params.id).populate("projects").exec(function(err,freelancer){
+            
+            if(err)
+            {
+                console.log(err);
+            }
+            else{
+           res.render("show", {freelancer:freelancer}); 
+            }
+        });
+       
+    });
+    
+    
+    
+    app.post("/freelancer/:id", function(req,res){
+        
+        Freelancer.findById(req.params.id, function(err, freelancer){
+            if(err){
+                console.log(err);
+            }
+            else{
+               
+                
+                Project.create(req.body.project, function(err,createdProject){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        
+                        freelancer.projects.push(createdProject);
+                        freelancer.save();
+                        res.redirect("/freelancer/" + req.params.id);
+                    }
+                });
+            }
+        });
+        
+    });
+    
+    app.get("/freelancer/:id/new", function(req,res){
+       
+       Freelancer.findById(req.params.id, function(err,freelancer){
+           if(err)
+           {
+               console.log(err);
+           }
+           else{
+                res.render("newProject", {freelancer:freelancer}); 
+           }
+           
+       });
+      
+    });
+    
+    
+    function isLoggedIn(req,res,next)
+    {
+        if(req.isAuthenticated())
+        {
+            next();
+        }
+        else
+        {
+            res.redirect("/");
+        }
+    }
     
      app.listen(process.env.PORT, process.env.IP);

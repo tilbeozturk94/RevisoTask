@@ -3,11 +3,9 @@ var mongoose = require("mongoose");
 var projectSchema = new mongoose.Schema({
     
    projectName: String,
-   timeSpent: [{
-       
-       task: String,
-       time: String
-   }]
+   image: String,
+   description: String,
+   timeSpent: Number
     
 });
 

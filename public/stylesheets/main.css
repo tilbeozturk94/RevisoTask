@@ -1,10 +1,45 @@
-#loginHeader{
+.centerHeader{
     
     text-align: center;
 }
 
-#loginDiv{
+.mainDiv{
     
     width: 30%;
     margin:25px auto;
+}
+
+#freelancerDiv{
+    
+    display:flex;
+    flex-wrap:wrap;
+}
+
+#imgLanding{
+    
+    width: 200px;
+    height: 200px;
+}
+
+#displayHeader{
+    
+    display: inline-block;
+}
+
+#displaySecondary{
+    
+    display: inline;
+    margin-left: 5px;
+}
+#displayBtn{
+    float:right;
+}
+
+#freeImg{
+    
+    height: 270px;
+    width: 450px;
+}
+#projectName{
+    color:#4286f4;
 }

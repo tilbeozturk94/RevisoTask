@@ -10,9 +10,27 @@
         </p>
         </div>
     </header>
+
+    <div class="row text-center" id="freelancerDiv">
+        <% freelancer.forEach(function(index){ %>
+            <div class="col-md-3 col-sm-6">
+            <div class="thumbnail">
+                <img id="imgLanding" src="<%=index.image%>">
+                <div class="caption">
+                    <h4><%=index.user.username%></h4>
+                    <p><%=index.description%></p>
+                </div>
+                 <p>
+                <a href="/freelancer/<%= index._id %>"  class="btn btn-primary">More Info</a> 
+            </p>
+            </div>
+            </div>      
+        <% }) %>
+    
+    </div>
+
+
+
+
 </div>
-
-
-
-
 <% include ./partials/footer %>

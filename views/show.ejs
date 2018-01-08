@@ -1,0 +1,25 @@
+<% include partials/header %>
+<div class="container">
+    <div class="row">
+        <h1 id="displayHeader"><%= freelancer.user.username %></h1>
+        <h4 id="displaySecondary"><%=freelancer.description%></h4>
+      <% if(currentUser && freelancer.user.id.equals(currentUser._id)){ %>
+        <a id="displayBtn"class="btn btn-lg btn-primary" href="/freelancer/<%=freelancer._id%>/new">Add New Project</a>
+        <% }%>
+    </div>    
+    <div class="row">
+        <% freelancer.projects.forEach(function(pros){ %>
+             <div class="col-md-6 col-sm-3">
+            <div class="thumbnail">
+                <img id="freeImg" src="<%=pros.image%>">
+                <div class="caption">
+                    <h3 id="projectName"><%= pros.projectName %></h3>
+                    <em><h4><%=pros.timeSpent%> hours spent</h4></em>
+                    <p><%=pros.description%></p>
+                </div>
+            </div>
+            </div>
+         <% }) %>
+    </div>
+</div>
+<% include partials/footer %>
